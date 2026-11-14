@@ -5,7 +5,7 @@ grid_rows=8
 grid_cols=10
 cell_size=64
 
-#i used AI to find out help structure the code
+#I used AI to find out help structure the code
 def grid(grid_rows,grid_cols,cell_size):
 
     hud_height=(grid_cols-grid_rows)*cell_size
