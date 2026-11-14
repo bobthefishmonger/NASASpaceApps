@@ -21,14 +21,6 @@ class GameEvent:
             "flare_class": self.flare_class,
             "is_resolved": self.is_resolved,
         }
-    def get_state(self):
-        return {
-            "event_id": self.event_id,
-            "target": self.target_module.name if self.target_module else None,
-            "severity": self.severity,
-            "flare_class": self.flare_class,
-            "is_resolved": self.is_resolved,
-        }
 
 class InfrastructureModule:
     def __init__(self, name, max_health=100.0):
