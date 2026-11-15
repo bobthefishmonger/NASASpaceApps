@@ -1,7 +1,10 @@
 import time
 
+
 class GameEvent:
-    def __init__(self, event_id, target_module=None, severity="WARNING", flare_class=None):
+    def __init__(
+        self, event_id, target_module=None, severity="WARNING", flare_class=None
+    ):
         self.event_id = event_id
         self.target_module = target_module
         self.severity = severity
@@ -80,8 +83,9 @@ class Environment:
 #    def get_state(self):
 #        return {"sol": self.sol, "hour": self.hour, "total_hours": self.total_hours}
 
-# clock = MarsClock()          
-# TICK_SECONDS = 15            
+
+# clock = MarsClock()
+# TICK_SECONDS = 15
 
 # while True:
 #     clock.advance()
