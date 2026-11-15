@@ -1,76 +1,61 @@
 import pygame
+import pygamepopup
+from pygamepopup.components import Button, InfoBox
+from pygamepopup.menu_manager import MenuManager
 running = True
+
+pygame.init()
+pygamepopup.init()
 grid_rows=8
 grid_cols=10
-cell_size=64
-# Class widget or pop-up window
-#I used AI to find out help structure the code
-def grid(grid_rows,grid_cols,cell_size):
+cell_size=67.5
 
-    hud_height=(grid_cols-grid_rows)*cell_size
-    
-    screen.fill((20,20,20))
-
-    grid_width=grid_rows*cell_size
-
-    for row_no in range(grid_rows):
-
-        for col_no in range (grid_cols):
-            
-            rect=pygame.Rect(cell_size*col_no,hud_height+cell_size*row_no, cell_size, cell_size)
-            pygame.draw.rect(screen,(100,100,100),rect,1)
-
-    pygame.display.flip()
-
-    return rect
-
-def onclick_grid(cell_size,event):
-        
-    mouse_x,mouse_y=event.pos
-    
-    mouse_row=mouse_y//cell_size
-    mouse_col=mouse_x//cell_size
-
-    return (mouse_col,mouse_row)
-
-
-'''def building(popup_open,selected_cell,cell_roles,tile_options,screen):
-    popup_rect=pygame.Rect(0,0,240,420)
-    popup_rect.center=screen.get_rect().center
-
-    option_rects=[]
-    for i in range(len(tile_options)):
-        option_button=pygame.Rect(0,0,200,40)
-        option_button.centerx=popup_rect.centerx
-        option_button.y=popup_rect.y+40+i*45
-        option_rects.append(option_button)
-'''
-
-
-# i used AI to help me find bugs
 screen = pygame.display.set_mode((grid_cols*cell_size,grid_cols*cell_size)) 
-#ai used here start
-popup_open=True
-selected_cell=None
+menu_manager = MenuManager(screen)
 cell_roles={}
 tile_options=["Martian Surface", "Habitat","Farm","Solar Panel",
               "Nuclear Reactor","Oxygen","Science", "Launch site"]
 
-popup_rect=pygame.Rect(0,0,240,420)
-popup_rect.center=screen.get_rect().center
-for i in range(len(tile_options)):
+#I used AI to find out help structure the code
+def draw_grid(grid_rows,grid_cols,cell_size):
 
-    option_rects=[]
+    hud_height=(grid_cols-grid_rows)*cell_size
+    hud=pygame.Rect(0,0, grid_cols*cell_size, hud_height)
+    pygame.draw.rect(screen, (255,255,255), hud, 1)
+    pygame.display.flip()
+    
+    screen.fill((20,20,20))
 
-    option_button=pygame.Rect(0,0,200,40)
-    option_button.centerx=popup_rect.centerx
-    option_button.y=popup_rect.y+40+i*45
-    option_rects.append(option_button)
+    grid_width=grid_rows*cell_size
+    grid = []
+    row = []
+    for row_no in range(grid_rows):
+        row = []
+        for col_no in range (grid_cols):
+           grid_square=pygame.Rect(cell_size*col_no,cell_size*row_no, cell_size, cell_size)
+           pygame.draw.rect(screen,(100,100,100),grid_square,1)
+           row.append(grid_square)
+        grid.append(row)
+    pygame.display.flip()
+    
+    return grid
 
-    dim_surface = pygame.Surface(screen.get_size())
-    dim_surface.set_alpha(150)
-    dim_surface.fill((0, 0, 0))
-#ai used here end
+def onclick_grid(grid_rows,grid_cols,cell_size):
+
+    grid = draw_grid(grid_rows,grid_cols,cell_size)
+
+    mouse = pygame.mouse.get_pos()
+    for i in range (grid_rows):
+        for j in range (grid_cols):
+            if grid[i][j].collidepoint(mouse):
+                return i,j
+    return 0,0
+                
+# i used AI to help me find bugs
+#ai used here start
+popup_open=True
+selected_cell=None
+
 while running:
     screen.fill((20,20,20))
     for event in pygame.event.get():
@@ -81,13 +66,13 @@ while running:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
 
-            mouse_pos=onclick_grid(cell_size,event)
-            print(mouse_pos)
-            #written by AI (start)
-            
-        #written by AI end  
+            mouse_col,mouse_row=onclick_grid(grid_rows,grid_cols,cell_size)
+            print(mouse_col,mouse_row)
 
-        grid(grid_rows,grid_cols,cell_size)
+
+
+
+        draw_grid(grid_rows,grid_cols,cell_size)
 
        
 
