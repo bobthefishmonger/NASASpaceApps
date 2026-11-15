@@ -1,20 +1,14 @@
 import pygame
-import pygamepopup
-from pygamepopup.components import Button, InfoBox
-from pygamepopup.menu_manager import MenuManager
+
 running = True
 
 pygame.init()
-pygamepopup.init()
+
 grid_rows=8
 grid_cols=10
 cell_size=67.5
 
 screen = pygame.display.set_mode((grid_cols*cell_size,grid_cols*cell_size)) 
-menu_manager = MenuManager(screen)
-cell_roles={}
-tile_options=["Martian Surface", "Habitat","Farm","Solar Panel",
-              "Nuclear Reactor","Oxygen","Science", "Launch site"]
 
 #I used AI to help structure this code
 def draw_grid(grid_rows,grid_cols,cell_size):
