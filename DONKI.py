@@ -2,6 +2,7 @@ from Events import Environment
 import os
 import requests
 import json
+import numpy
 
 from dotenv import load_dotenv
 
@@ -27,7 +28,7 @@ if response.status_code == 200:
     probability = round(len(m_class) / 60, 2)
     print("probability =", probability)
     if m_class:
-        print(json.dumps(m_class[0], indent=2))
+        print(json.dumps(m_class[0]))
 else:
     print(f"error {response.status_code}: {response.text}")
 
@@ -47,5 +48,5 @@ class RandomHazards:
         if self.rng.random() < self.storm_chance:   
             alerts.append(self.environment.activate_sand_storm(self.buildings))
         if self.rng.random() < self.flare_chance:    
-            alerts.append(self.environment.activate_solar_flare(self.buildings))
+              alerts.append(self.environment.activate_solar_flare(self.buildings))
         return alerts
