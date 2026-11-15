@@ -52,8 +52,7 @@ class Environment:
         targets = self.rng.sample(standing, min(count, len(standing)))
         for building in targets:
             building.take_damage(100.0)
-            self.active_events.append(GameEvent(
-                event_id, target_module=building, severity="CRITICAL", flare_class=flare_class))
+            self.active_events.append(GameEvent(event_id, target_module=building, severity="CRITICAL", flare_class=flare_class))
         return [b.name for b in targets]
 
     def activate_sand_storm(self, buildings, count=3):
@@ -66,23 +65,23 @@ class Environment:
         return {"code": "solar_flare", "flare_class": flare_class, "destroyed": destroyed}
 
 
-"""
-class MarsClock:
-    HOURS_PER_SOL = 24
 
-    def __init__(self, hours_per_tick=1):
-        self.hours_per_tick = hours_per_tick
-        self.total_hours = 0
-        self.sol = 1
-        self.hour = 0
+#class MarsClock:
+#    HOURS_PER_SOL = 24
 
-    def advance(self):
-        self.total_hours += self.hours_per_tick
-        self.sol = self.total_hours // self.HOURS_PER_SOL + 1
-        self.hour = self.total_hours % self.HOURS_PER_SOL
+#    def __init__(self, hours_per_tick=1):
+#        self.hours_per_tick = hours_per_tick
+#        self.total_hours = 0
+#        self.sol = 1
+#        self.hour = 0
 
-    def get_state(self):
-        return {"sol": self.sol, "hour": self.hour, "total_hours": self.total_hours}
+#    def advance(self):
+#        self.total_hours += self.hours_per_tick
+#        self.sol = self.total_hours // self.HOURS_PER_SOL + 1
+#        self.hour = self.total_hours % self.HOURS_PER_SOL
+
+#    def get_state(self):
+#        return {"sol": self.sol, "hour": self.hour, "total_hours": self.total_hours}
 
 
 # clock = MarsClock()
