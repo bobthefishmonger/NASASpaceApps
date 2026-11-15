@@ -1,16 +1,20 @@
-from Events import Environment, make_base
-
+from Events import Environment
+import os
 import requests
 import json
 
-API_key = "bG9GfKhtF8rwFTdMRNMMHqWBKCD6ChRD7mz7bj7J"
+from dotenv import load_dotenv
+
+load_dotenv()
+
+api_key = os.environ.get('APIKEY')
 
 url = "https://ccmc.gsfc.nasa.gov/DONKI-API/get/FLR"
 
 params = {
     "startDate": "2026-09-16",
     "endDate": "2026-11-15",
-    "api_key": API_key
+    "api_key": api_key
 }
 
 response = requests.get(url, params=params)
@@ -34,6 +38,14 @@ class RandomHazards:
     def __init__(self, environment, buildings, storm_chance=0.01, flare_chance=probability):
         self.environment = environment
         self.buildings = buildings
-        self.storm_chance = storm_chance      # chance per tick (0.01 = 1%)
+        self.storm_chance = storm_chance  
         self.flare_chance = flare_chance
         self.rng = environment.rng 
+
+    def tick(self):
+        alerts = []
+        if self.rng.random() < self.storm_chance:   
+            alerts.append(self.environment.activate_sand_storm(self.buildings))
+        if self.rng.random() < self.flare_chance:    
+            alerts.append(self.environment.activate_solar_flare(self.buildings))
+        return alerts
