@@ -21,61 +21,49 @@ class GameEvent:
             "flare_class": self.flare_class,
             "is_resolved": self.is_resolved,
         }
-    def get_state(self):
-        return {
-            "event_id": self.event_id,
-            "target": self.target_module.name if self.target_module else None,
-            "severity": self.severity,
-            "flare_class": self.flare_class,
-            "is_resolved": self.is_resolved,
-        }
 
-class InfrastructureModule:
-    def __init__(self, name, max_health=100.0):
-        self.name = name
-        self.max_health = max_health
-        self.health = max_health
-        self.is_damaged = False
+#class InfrastructureModule:
+#    def __init__(self, name, max_health=100.0):
+#        self.name = name
+#        self.max_health = max_health
+#        self.health = max_health
+#        self.is_damaged = False
 
-    def take_damage(self, amount):
-        self.health = max(0.0, self.health - amount)
-        if self.health <= 0.0:
-            self.is_damaged = True
-        return self.is_damaged
-
-    def repair(self):
-        self.health = self.max_health
-        self.is_damaged = False
+#    def take_damage(self, amount):
+#        self.health = max(0.0, self.health - amount)
+#        if self.health <= 0.0:
+#            self.is_damaged = True
+#        return self.is_damaged
+#
+#    def repair(self):
+#        self.health = self.max_health
+#        self.is_damaged = False
 
 class Environment:
     def __init__(self):
-        self.sand_storm_active = False
-        self.solar_flare_active = False
         self.season = "spring"
         self.active_events = []
 
-    def activate_sand_storm(self, solar_panel_module):
-        self.sand_storm_active = True
-        if not solar_panel_module.is_damaged:
-            solar_panel_module.take_damage(100.0)
+    def strike(self, event_id, buildings, count, flare_class=None):
+        standing = [b for b in buildings if not b.is_damaged]
+        targets = self.rng.sample(standing, min(count, len(standing)))
+        for building in targets:
+            building.take_damage(100.0)
             self.active_events.append(GameEvent(
-                "solar_panel_loss", target_module=solar_panel_module, severity="CRITICAL"))
-        return {"type": "HAZARD", "code": "sand_storm"}
+                event_id, target_module=building, severity="CRITICAL", flare_class=flare_class))
+        return [b.name for b in targets]
 
-    def clear_sand_storm(self):
-        self.sand_storm_active = False
+    def activate_sand_storm(self, buildings, count=3):
+        panels = [b for b in buildings if b.kind == "solar"]
+        destroyed = self.strike("sand_storm_damage", panels, count)
+        return {"code": "sand_storm", "destroyed": destroyed}
 
-    def activate_solar_flare(self, flare_class="M", target_module=None):
-        self.solar_flare_active = True
-        if target_module and not target_module.is_damaged:
-            target_module.take_damage(100.0)
-        self.active_events.append(GameEvent(
-            "solar_flare_surge", target_module=target_module, flare_class=flare_class))
-        return {"type": "DONKI_ALERT", "code": "solar_flare", "flare_class": flare_class}
+    def activate_solar_flare(self, buildings, flare_class="M", count=3):
+        destroyed = self.strike("solar_flare_damage", buildings, count, flare_class)
+        return {"code": "solar_flare", "flare_class": flare_class, "destroyed": destroyed}
 
-    def clear_solar_flare(self):
-        self.solar_flare_active = False
 
+"""
 class MarsClock:
     HOURS_PER_SOL = 24
 
@@ -100,3 +88,6 @@ class MarsClock:
 #     clock.advance()
 #     print(clock.get_state())
 #     time.sleep(TICK_SECONDS)
+
+
+
