@@ -49,9 +49,7 @@ def onclick_grid(grid_rows,grid_cols,cell_size):
     return 0,0
                 
 # i used AI to help me find bugs
-#ai used here start
-popup_open=True
-selected_cell=None
+
 
 while running:
     screen.fill((20,20,20))
