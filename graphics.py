@@ -14,6 +14,8 @@ time_since_sol = 0
 pause_button_clicked = True
 resume_button_clicked = False
 
+mouseClicked = False
+
 clock = pygame.time.Clock()
 running = True
 active = True
@@ -33,16 +35,18 @@ Oxygen_level_display = None
 Radiation_exposure_level_display = None
 daily_message = None
 pause_message = None
+sol_text_object = None
+Food_amount_object = None
+Power_level_object = None
+Oxygen_level_object = None
+Radiation_exposure_level_object = None
+daily_message_object = None
+pause_message_object = None
 
 
 def updateDisplays():
-    global sol_text_display
-    global Food_amount_display
-    global Power_level_display
-    global Oxygen_level_display
-    global Radiation_exposure_level_display
-    global daily_message
-    global pause_message
+    global sol_text_display, Food_amount_display, Power_level_display, Oxygen_level_display
+    global Radiation_exposure_level_display, daily_message, pause_message
     if 19.5 <= oxygen_level <= 23.5:
         oxygen_text = " (Safe)"
         Oxygen_level_display = font1.render(
@@ -93,20 +97,17 @@ def updateDisplays():
 
 
 def render():
-    global sol_text_display
-    global Food_amount_display
-    global Power_level_display
-    global Oxygen_level_display
-    global Radiation_exposure_level_display
-    global daily_message
-    global pause_message
+    global sol_text_display, Food_amount_display, Power_level_display, Oxygen_level_display
+    global Radiation_exposure_level_display, daily_message, pause_message
+    global sol_text_object, Food_amount_object, Power_level_object, Oxygen_level_object
+    global Radiation_exposure_level_object, daily_message_object, pause_message_object, play_button_object
     updateDisplays()
     screen.fill((0, 0, 0))
     if pause_button_clicked:
         active = False
         pause_message = font2.render("GAME PAUSED", True, (255, 255, 255))
         play_button = font2.render("RESUME", True, (157, 0, 250))
-        screen.blit(play_button, (350, 100))
+        play_button_object = screen.blit(play_button, (350, 100))
     else:
         pause_message = font2.render("❚❚ PAUSE", True, (255, 255, 255))
         if sol == 1:
@@ -115,15 +116,30 @@ def render():
                 True,
                 (255, 255, 255),
             )
-        screen.blit(daily_message, (350, 580))
+            daily_message_object = screen.blit(daily_message, (350, 580))
 
-    screen.blit(sol_text_display, (10, 10))
-    screen.blit(Food_amount_display, (50, 10))
-    screen.blit(Power_level_display, (160, 10))
-    screen.blit(Oxygen_level_display, (250, 10))
-    screen.blit(pause_message, (700, 10))
-    screen.blit(Radiation_exposure_level_display, (470, 10))
+    sol_text_object = screen.blit(sol_text_display, (10, 10))
+    Food_amount_object = screen.blit(Food_amount_display, (50, 10))
+    Power_level_object = screen.blit(Power_level_display, (160, 10))
+    Oxygen_level_display = screen.blit(Oxygen_level_display, (250, 10))
+    pause_message_object = screen.blit(pause_message, (700, 10))
+    Radiation_exposure_level_object = screen.blit(
+        Radiation_exposure_level_display, (470, 10)
+    )
     pygame.display.flip()
+
+
+def processclicks():
+    global sol_text_object, Food_amount_object, Power_level_object, Oxygen_level_object
+    global Radiation_exposure_level_object, daily_message_object, pause_message_object, play_button_object
+    global resume_button_clicked, pause_button_clicked
+    mouse = pygame.mouse.get_pos()
+    if play_button_object.collidepoint(mouse):
+        resume_button_clicked = True
+        pause_button_clicked = False
+    if pause_message_object.collidepoint(mouse):
+        resume_button_clicked = not resume_button_clicked
+        pause_button_clicked = not pause_button_clicked
 
 
 while running:
@@ -132,7 +148,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
             pygame.quit()
-
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouseClicked = True
+            processclicks()
+        if event.type == pygame.MOUSEBUTTONUP:
+            mouseClicked = False
     if resume_button_clicked:
         active = True
         pause_button_clicked = False
