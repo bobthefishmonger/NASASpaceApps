@@ -16,15 +16,14 @@ cell_roles={}
 tile_options=["Martian Surface", "Habitat","Farm","Solar Panel",
               "Nuclear Reactor","Oxygen","Science", "Launch site"]
 
-#I used AI to find out help structure the code
+#I used AI to help structure this code
 def draw_grid(grid_rows,grid_cols,cell_size):
+
+    screen.fill((20,20,20))
 
     hud_height=(grid_cols-grid_rows)*cell_size
     hud=pygame.Rect(0,0, grid_cols*cell_size, hud_height)
     pygame.draw.rect(screen, (255,255,255), hud, 1)
-    pygame.display.flip()
-    
-    screen.fill((20,20,20))
 
     grid_width=grid_rows*cell_size
     grid = []
@@ -36,10 +35,8 @@ def draw_grid(grid_rows,grid_cols,cell_size):
            pygame.draw.rect(screen,(100,100,100),grid_square,1)
            row.append(grid_square)
         grid.append(row)
-    pygame.display.flip()
     
     return grid
-
 def onclick_grid(grid_rows,grid_cols,cell_size):
 
     grid = draw_grid(grid_rows,grid_cols,cell_size)
