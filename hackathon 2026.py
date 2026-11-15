@@ -74,6 +74,9 @@ else:
         True,
         (255, 0, 0),
     )  # red if it is high
+if pause_button_clicked:
+    pause_message = font2.render("GAME PAUSED", True, (255, 255, 255)) 
+    active = False #sets the active variable to false, which will stop the game loop from running
 
 screen.fill((0, 0, 0))  # fills the screen with black color
 screen.blit(
@@ -85,6 +88,7 @@ screen.blit(Oxygen_level, (250, 10))
 if oxygen_text != " (Safe)":
     screen.blit(Radiation_exposure_level, (470, 10))
 else:
+    pause_message = font2.render("❚❚" + " PAUSE", True, (255, 255, 255)) #creates a pause button with the text "Pause" in white color
     screen.blit(Radiation_exposure_level, (400, 10))
 pygame.display.flip()  # updates the display to show the text
 
@@ -95,6 +99,7 @@ clock = pygame.time.Clock()  # creates a clock object to manage time
 running = True
 
 time_elapsed = 0 #initializes the time elapsed variable to 0
+
 
 if active:
     time_elapsed += pygame.time.get_ticks() / sol #increments the time elapsed variable by the number of milliseconds since the game started
@@ -141,20 +146,18 @@ while running: #while the game is running, the following code will run
             if (
                 pygame.time.get_ticks() == 600000 and sol < 100
             ):  # checks if 600000 milliseconds have elapsed since the game started
-                sol += 1  # increments the sol days
-                daily_message = font2.render(
-                    "You are now on Sol:"
+                if time_elapsed == 600000 and sol < 100: #checks if 600000 milliseconds have elapsed since the game started
+                   sol += 1  # increments the sol days
+                   daily_message = font2.render( "You are now on Sol:"
                     + str(sol)
                     + ". Please check the events calender for a list of the day's challenges!",
                     True,
                     (255, 255, 255),
                 )
-                screen.blit(
+                   screen.blit(
                     daily_message, (350, 580)
                 )  # blits the daily message to the screen at the coordinates (350,580)
-            elif (
-                sol == 100 and pygame.time.get_ticks() == 600000
-            ):  # checks if the sol days have reached 100 and if 600000 milliseconds have elapsed since the game started
+            elif sol == 100 and pygame.time.get_ticks() == 600000:  # checks if the sol days have reached 100 and if 600000 milliseconds have elapsed since the game started
                 sol_message = font2.render(
                     "You have completed 100 Sol days! Close the game or the Sol days will reset to 1.",
                     True,
